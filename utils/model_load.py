@@ -1,8 +1,20 @@
-
+import os
+from dotenv import load_dotenv
+from typing import Literal, Optional, Any
+from pydantic import BaseModel, Field
+from langchain_huggingface import HuggingFaceEmbeddings
+from utils.config_loader import load_config
+from langchain_groq import ChatGroq
+from langchain_openai import ChatOpenAi
 
 class ConfigLoader:
-    def __init(self):
-        pass
+    def __init__(self):
+        print("Loading configuration...")
+        self.config = load_config()
+
+    def __getitem__(self,key):
+        return self.config[key]
+        
 
 
 class ModelLoader(BaseModel):
