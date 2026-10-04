@@ -1,16 +1,18 @@
-import yml
-import os
+from pathlib import Path
+import yaml
 
-def load_config(config_path: str = "config/config.yml") -> dict:
-    """
-    Load configuration from a YAML file.
+BASE_DIR = Path(__file__).resolve().parents[1]
+DEFAULT_CONFIG_PATH = BASE_DIR / "config" / "config.yaml"
 
-    Args:
-        config_path (str): Path to the YAML configuration file.
 
-    Returns:
-        dict: The loaded configuration.
-    """
-    with open(config_path, 'r') as f:
-        config = yml.safe_load(f)
+def load_config(config_path: str | Path | None = None) -> dict:
+    path = Path(config_path) if config_path else DEFAULT_CONFIG_PATH
+    print(f"Loading configuration from: {path}")
+
+    if not path.is_absolute():
+        path = BASE_DIR / path
+
+    with path.open("r", encoding="utf-8") as f:
+        config = yaml.safe_load(f) or {}
+
     return config
