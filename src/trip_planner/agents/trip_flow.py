@@ -3,12 +3,17 @@ from prompts.prompt import SYSTEM_PROMPT
 
 from langgraph.graph import StateGraph, MessagesState, END, START
 from langgraph.prebuilt import ToolNode, tools_condition
+from trip_planner.tools.weather_info import get_weather_info
+from trip_planner.tools.place_search import get_places
 
 class GraphBuilder:
     def __init__(self, llm=None):
         self.model_loader = ModelLoader()
         self.llm = llm or self.model_loader.load_llm()
-        self.tools = []
+        self.tools = [
+            get_weather_info,
+            get_places
+        ]
         self.system_prompt = SYSTEM_PROMPT
 
         if self.llm is not None:
