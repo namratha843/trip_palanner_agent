@@ -5,6 +5,8 @@ from langgraph.graph import StateGraph, MessagesState, END, START
 from langgraph.prebuilt import ToolNode, tools_condition
 from trip_planner.tools.weather_info import get_weather_info
 from trip_planner.tools.place_search import get_places
+from trip_planner.tools.currency_convertor import convert_currency
+from trip_planner.tools.total_expense import calculate_total_expense
 
 class GraphBuilder:
     def __init__(self, llm=None):
@@ -12,7 +14,9 @@ class GraphBuilder:
         self.llm = llm or self.model_loader.load_llm()
         self.tools = [
             get_weather_info,
-            get_places
+            get_places,
+            convert_currency,
+            calculate_total_expense
         ]
         self.system_prompt = SYSTEM_PROMPT
 
@@ -38,7 +42,7 @@ class GraphBuilder:
         graph_builder.add_edge(START, "agent")
         graph_builder.add_conditional_edges("agent", tools_condition)
         graph_builder.add_edge("tools", "agent")
-        graph_builder.add_edge("agent", END)
+        
 
         self.graph = graph_builder.compile()
         return self.graph

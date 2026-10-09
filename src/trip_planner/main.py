@@ -14,6 +14,7 @@ from trip_planner.agents.trip_flow import GraphBuilder
 
 app = FastAPI()
 builder = GraphBuilder()
+graph = builder.build_graph()
 
 class QueryRequest(BaseModel):
     query: str
@@ -25,6 +26,6 @@ async def health():
 @app.post("/query")
 async def query(req: QueryRequest):
     state = {"messages": [HumanMessage(content=req.query)]}
-    result = builder.agent_function(state)
+    result = graph.invoke(state)
     print("Result:---", result)
     return {"response": result["messages"][-1].content}
