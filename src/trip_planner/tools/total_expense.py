@@ -1,17 +1,27 @@
+
 from langchain_core.tools import tool
+
 
 @tool
 def calculate_total_expense(expenses: list[float]) -> str:
     """
-    Calculate the totdal of a list trip expenses
+    Calculate the total of a list of expenses.
+    All expenses must be in the same currency.
+
+    Example:
+        expenses = [5000, 3000, 2000]
     """
 
     if not expenses:
-        raise ValueError("Expenses list cannot be empty.")
+        return "Please provide at least one expense."
 
-    if any(expense < 0 for expense in expenses):
-        raise ValueError("Expenses cannot contain negative values.")
+    if any(amount < 0 for amount in expenses):
+        return "Expenses cannot be negative."
 
     total = sum(expenses)
-    return f"The total expense for the trip is: ${total:.2f}"
 
+    return (
+        f"Expense breakdown: {expenses}\n"
+        f"Total expense: {total:.2f}\n"
+        "Note: All amounts are assumed to be in the same currency."
+    )
